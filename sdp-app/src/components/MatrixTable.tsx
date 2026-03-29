@@ -1,0 +1,271 @@
+import { ChevronRightIcon, InfoIcon, SortIcon, FilterIcon } from './icons'
+import { cn } from '../lib/utils'
+import { matrixData, type SupportStatus } from '../data/matrixData'
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Helpers
+// ──────────────────────────────────────────────────────────────────────────────
+
+function getDepth(index: string): number {
+  return (index.match(/\./g) || []).length
+}
+
+const STATUS_STYLES: Record<SupportStatus, string> = {
+  Accepted: 'bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7]',
+  Pending:  'bg-[#FFF8E1] text-[#F57F17] border border-[#FFE082]',
+  Rejected: 'bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]',
+  BM:       'bg-[#EDE7F6] text-[#4527A0] border border-[#B39DDB]',
+  Comp:     'bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9]',
+  '-':      '',
+}
+
+function StatusBadge({ status }: { status: SupportStatus }) {
+  if (status === '-') return <span className="text-[#B0B6BC]">-</span>
+  return (
+    <span className={cn('inline-flex items-center px-1.5 py-px rounded text-[10px] font-medium leading-none', STATUS_STYLES[status])}>
+      {status}
+    </span>
+  )
+}
+
+function PersonCell({ value }: { value: string }) {
+  if (!value || value === '-') return <span className="text-[#B0B6BC]">-</span>
+  if (value.endsWith('+')) {
+    const base = value.slice(0, -1)
+    return (
+      <span className="text-[11px] text-[#384047]">
+        {base}
+        <span className="ml-0.5 text-[#2D6BE4] font-bold">+</span>
+      </span>
+    )
+  }
+  return (
+    <span className="text-[11px] text-[#384047] truncate block">{value}</span>
+  )
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Column Header Cell
+// ──────────────────────────────────────────────────────────────────────────────
+
+function ColHeader({ label, width, showFilter = true }: { label: string; width: number; showFilter?: boolean }) {
+  return (
+    <th
+      className="relative h-7 bg-[#F3F6F8] border-r border-b border-[#E0E4E8] text-left align-middle p-0"
+      style={{ width, minWidth: width }}
+    >
+      <div className="flex items-center justify-between px-2 h-full gap-1">
+        <div className="flex items-center gap-1 overflow-hidden">
+          <span className="text-[11px] font-medium text-[#56595F] truncate">{label}</span>
+          <InfoIcon className="flex-shrink-0 opacity-50" />
+          <SortIcon className="flex-shrink-0" />
+        </div>
+        {showFilter && <FilterIcon className="flex-shrink-0 opacity-50 cursor-pointer hover:opacity-100" />}
+      </div>
+      <span className="absolute right-0 top-1 bottom-1 w-px bg-[#E0E4E8]" />
+    </th>
+  )
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Main Matrix Table
+// ──────────────────────────────────────────────────────────────────────────────
+
+const ERS_COLS: Array<{ label: string; width: number; key: string }> = [
+  { label: 'Index',   width: 54,  key: 'index' },
+  { label: 'ERS Title', width: 241, key: 'title' },
+  { label: '진행율',   width: 74,  key: 'progress' },
+  { label: 'Updated', width: 100, key: 'updated' },
+]
+
+const SRS_COLS: Array<{ label: string; width: number; key: keyof typeof matrixData[0] }> = [
+  { label: 'Support',         width: 90,  key: 'support' },
+  { label: 'APS(Eletric)',    width: 120, key: 'apsElectric' },
+  { label: 'APS(Optic)',      width: 120, key: 'apsOptic' },
+  { label: 'Analog',          width: 120, key: 'analog' },
+  { label: 'Digital(Chip설계)', width: 136, key: 'digitalChip' },
+  { label: 'FW',              width: 120, key: 'fw' },
+  { label: 'ALPDP',           width: 120, key: 'alpdp' },
+  { label: 'PM',              width: 120, key: 'pm' },
+]
+
+const ERS_WIDTH = ERS_COLS.reduce((s, c) => s + c.width, 0)  // 469
+const SRS_WIDTH = SRS_COLS.reduce((s, c) => s + c.width, 0)  // 946
+
+export function MatrixTable() {
+  return (
+    <div className="flex-1 overflow-hidden flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
+      <div className="flex-1 overflow-auto">
+        <table
+          className="border-collapse"
+          style={{ tableLayout: 'fixed', width: ERS_WIDTH + SRS_WIDTH }}
+        >
+          <thead className="sticky top-0 z-20">
+            {/* Group header row */}
+            <tr>
+              {/* ERS group */}
+              <th
+                colSpan={ERS_COLS.length}
+                className="h-7 bg-[#E8ECF0] border-r border-b border-[#E0E4E8] text-left"
+                style={{ width: ERS_WIDTH }}
+              >
+                <div className="flex items-center justify-between px-3">
+                  <span className="text-[11px] font-semibold text-[#384047]">ERS</span>
+                </div>
+              </th>
+
+              {/* SRS group */}
+              <th
+                colSpan={SRS_COLS.length}
+                className="h-7 bg-[#E4EDF9] border-b border-[#E0E4E8] text-left"
+                style={{ width: SRS_WIDTH }}
+              >
+                <div className="flex items-center px-3">
+                  <span className="text-[11px] font-semibold text-[#2D6BE4]">SRS</span>
+                </div>
+              </th>
+            </tr>
+
+            {/* Column header row */}
+            <tr>
+              {ERS_COLS.map((col) => (
+                <ColHeader key={col.key} label={col.label} width={col.width} />
+              ))}
+              {SRS_COLS.map((col) => (
+                <ColHeader key={col.key} label={col.label} width={col.width} />
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {matrixData.map((row, i) => {
+              const depth = getDepth(row.index)
+              const isGroup = row.isGroupHeader
+              const isEven = i % 2 === 0
+              const rowBg = isGroup ? '#F5F7F9' : isEven ? '#FFFFFF' : '#FAFBFC'
+
+              return (
+                <tr
+                  key={i}
+                  className="group hover:bg-[#EEF3FB] transition-colors"
+                  style={{ height: 23 }}
+                >
+                  {/* Index cell */}
+                  <td
+                    className="border-r border-b border-[#E0E4E8] p-0 align-middle"
+                    style={{ backgroundColor: rowBg, width: 54, minWidth: 54 }}
+                  >
+                    <div
+                      className="flex items-center gap-0.5 px-1.5"
+                      style={{ paddingLeft: 6 + depth * 8 }}
+                    >
+                      <ChevronRightIcon className="flex-shrink-0 opacity-40" />
+                      <span
+                        className={cn(
+                          'text-[11px] leading-none',
+                          isGroup ? 'font-semibold text-[#384047]' : 'text-[#56595F]'
+                        )}
+                      >
+                        {row.index}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* ERS Title cell */}
+                  <td
+                    className="border-r border-b border-[#E0E4E8] p-0 align-middle"
+                    style={{ backgroundColor: rowBg, width: 241, minWidth: 241 }}
+                  >
+                    <div className="flex items-center gap-1.5 px-2 overflow-hidden">
+                      {isGroup && (
+                        <span className="flex-shrink-0 inline-flex items-center px-1.5 py-px rounded text-[10px] bg-[#FFF3E0] text-[#E65100] border border-[#FFCC80]">
+                          SRS
+                        </span>
+                      )}
+                      <span
+                        className={cn(
+                          'text-[11px] truncate',
+                          isGroup ? 'font-semibold text-[#384047]' : 'text-[#384047]'
+                        )}
+                      >
+                        {row.title}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* 진행율 */}
+                  <td
+                    className="border-r border-b border-[#E0E4E8] px-2 align-middle text-center"
+                    style={{ backgroundColor: rowBg, width: 74, minWidth: 74 }}
+                  >
+                    {row.progress && row.progress !== '-' ? (
+                      <ProgressBar value={parseInt(row.progress) || 0} />
+                    ) : (
+                      <span className="text-[11px] text-[#B0B6BC]">-</span>
+                    )}
+                  </td>
+
+                  {/* Updated */}
+                  <td
+                    className="border-r border-b border-[#E0E4E8] px-2 align-middle"
+                    style={{ backgroundColor: rowBg, width: 100, minWidth: 100 }}
+                  >
+                    <span className="text-[11px] text-[#56595F]">{row.updated || '-'}</span>
+                  </td>
+
+                  {/* Support (status) */}
+                  <td
+                    className="border-r border-b border-[#E0E4E8] px-2 align-middle text-center"
+                    style={{ backgroundColor: rowBg, width: 90, minWidth: 90 }}
+                  >
+                    <StatusBadge status={row.support} />
+                  </td>
+
+                  {/* SRS person cells */}
+                  {(
+                    ['apsElectric', 'apsOptic', 'analog', 'digitalChip', 'fw', 'alpdp', 'pm'] as const
+                  ).map((key, ci) => {
+                    const colWidth = SRS_COLS[ci + 1]?.width ?? 120
+                    const val = row[key] as string
+                    const hasPerson = val && val !== '-'
+                    return (
+                      <td
+                        key={key}
+                        className="border-r border-b border-[#E0E4E8] px-2 align-middle overflow-hidden"
+                        style={{
+                          backgroundColor: hasPerson ? '#EEF3FB' : rowBg,
+                          width: colWidth,
+                          minWidth: colWidth,
+                        }}
+                      >
+                        <PersonCell value={val} />
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function ProgressBar({ value }: { value: number }) {
+  if (isNaN(value)) return <span className="text-[11px] text-[#B0B6BC]">-</span>
+  return (
+    <div className="flex flex-col items-center gap-0.5 w-full">
+      <span className="text-[10px] text-[#384047] font-medium">{value}%</span>
+      <div className="w-full h-1 bg-[#E0E4E8] rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full"
+          style={{
+            width: `${value}%`,
+            backgroundColor: value === 100 ? '#5BA85B' : value >= 50 ? '#2D6BE4' : '#F5A623',
+          }}
+        />
+      </div>
+    </div>
+  )
+}
