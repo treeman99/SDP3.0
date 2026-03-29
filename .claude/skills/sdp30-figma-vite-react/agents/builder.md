@@ -21,6 +21,26 @@ URL: https://www.figma.com/design/AbCdEf123/MyPage?node-id=12-34
 
 ## 라운드 1: Figma → 초기 코드 생성
 
+### Step 0. Figma 접근 방법 결정
+
+**항상 이 단계부터 시작한다.**
+
+1. **Figma MCP 도구 시도 (우선):**
+   `get_design_context`를 호출한다. 성공하면 Step 1로 바로 진행.
+
+2. **MCP 실패 시 → REST API fallback:**
+   - `FIGMA_TOKEN` 환경 변수 확인
+   - 없으면 **사용자에게 직접 요청:**
+
+   ```
+   Figma MCP에 접근할 수 없어 Personal Access Token이 필요합니다.
+   Figma → Settings → Security → Personal access tokens에서
+   발급한 토큰(figd_... 형식)을 입력해주세요.
+   ```
+
+   - 토큰을 받으면 `curl -H "X-Figma-Token: <token>"` 방식으로 REST API 사용
+   - **토큰을 어떤 파일에도 저장하지 않는다** (세션 내 메모리에서만 사용)
+
 ### Step 1. Figma 디자인 데이터 가져오기
 
 ```

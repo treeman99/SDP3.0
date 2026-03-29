@@ -65,6 +65,36 @@ description: >
 
 ## 0단계: 준비
 
+### Figma 접근 방법 확인 (필수 — 항상 가장 먼저 실행)
+
+Figma 데이터에 접근하는 방법은 우선순위 순으로 두 가지다:
+
+**방법 A — Figma MCP (우선):**
+`get_design_context`, `get_screenshot` 등 MCP 도구를 바로 호출한다.
+MCP가 정상 동작하면 토큰 없이 진행한다.
+
+**방법 B — REST API (MCP 불가 시):**
+MCP 호출이 실패하거나 MCP 서버가 없으면, Figma Personal Access Token이 필요하다.
+
+```
+토큰 확인 순서:
+1. 환경 변수 FIGMA_TOKEN 에 값이 있는지 확인
+   → 있으면 curl 헤더 X-Figma-Token: $FIGMA_TOKEN 사용
+2. 없으면 → 사용자에게 직접 요청:
+
+   "Figma Personal Access Token이 필요합니다.
+    Figma → Settings → Security → Personal access tokens에서
+    발급한 토큰(figd_... 형식)을 입력해주세요."
+
+3. 사용자가 토큰을 입력하면 해당 세션에서만 사용한다.
+   토큰을 어떤 파일에도 저장하지 않는다 (git 커밋 위험).
+```
+
+> **보안 주의:** 토큰을 `.claude/settings.local.json`, `.env`, 코드 파일 등
+> 어디에도 기록하지 않는다. 세션 내 메모리에서만 사용한다.
+
+---
+
 ### Figma URL 파싱
 
 사용자가 제공한 Figma URL에서 `fileKey`와 `nodeId`를 추출한다. 이 값은 모든 Figma MCP 도구 호출에 필요하다.
