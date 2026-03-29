@@ -1,6 +1,6 @@
 import { ChevronRightIcon, InfoIcon, SortIcon, FilterIcon } from './icons'
 import { cn } from '../lib/utils'
-import { matrixData, type SupportStatus } from '../data/matrixData'
+import { matrixData, type SupportStatus, type MatrixRow } from '../data/matrixData'
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -92,7 +92,12 @@ const SRS_COLS: Array<{ label: string; width: number; key: keyof typeof matrixDa
 const ERS_WIDTH = ERS_COLS.reduce((s, c) => s + c.width, 0)  // 469
 const SRS_WIDTH = SRS_COLS.reduce((s, c) => s + c.width, 0)  // 946
 
-export function MatrixTable() {
+interface MatrixTableProps {
+  onRowClick?: (row: MatrixRow) => void
+  selectedIndex?: string
+}
+
+export function MatrixTable({ onRowClick, selectedIndex }: MatrixTableProps) {
   return (
     <div className="flex-1 overflow-hidden flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
       <div className="flex-1 overflow-auto">
@@ -174,9 +179,16 @@ export function MatrixTable() {
                   {/* ERS Title cell */}
                   <td
                     className="border-r border-b border-[#E0E4E8] p-0 align-middle"
-                    style={{ backgroundColor: rowBg, width: 241, minWidth: 241 }}
+                    style={{
+                      backgroundColor: selectedIndex === row.index + row.title ? '#E8F0FC' : rowBg,
+                      width: 241,
+                      minWidth: 241,
+                    }}
                   >
-                    <div className="flex items-center gap-1.5 px-2 overflow-hidden">
+                    <div
+                      className="flex items-center gap-1.5 px-2 overflow-hidden cursor-pointer"
+                      onClick={() => onRowClick?.(row)}
+                    >
                       {isGroup && (
                         <span className="flex-shrink-0 inline-flex items-center px-1.5 py-px rounded text-[10px] bg-[#FFF3E0] text-[#E65100] border border-[#FFCC80]">
                           SRS
@@ -184,7 +196,7 @@ export function MatrixTable() {
                       )}
                       <span
                         className={cn(
-                          'text-[11px] truncate',
+                          'text-[11px] truncate hover:text-[#2D6BE4] hover:underline transition-colors',
                           isGroup ? 'font-semibold text-[#384047]' : 'text-[#384047]'
                         )}
                       >
