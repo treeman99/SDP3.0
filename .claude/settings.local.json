@@ -7,7 +7,8 @@
       "Bash(curl -s http://localhost:5174/)",
       "Bash(curl -v http://localhost:5173)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
