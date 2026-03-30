@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { cn } from '../lib/utils'
 import type { MatrixRow, SupportStatus } from '../data/matrixData'
 
@@ -18,6 +19,15 @@ function StarOutlineIcon() {
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
       <path d="M6 1L7.545 4.135L11 4.635L8.5 7.065L9.09 10.5L6 8.835L2.91 10.5L3.5 7.065L1 4.635L4.455 4.135L6 1Z"
         stroke="#56595F" strokeWidth="1" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function StarFilledIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M6 1L7.545 4.135L11 4.635L8.5 7.065L9.09 10.5L6 8.835L2.91 10.5L3.5 7.065L1 4.635L4.455 4.135L6 1Z"
+        fill="#2D6BE4" stroke="#2D6BE4" strokeWidth="1" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -44,7 +54,89 @@ function StatusInline({ status }: { status: string }) {
   )
 }
 
-// Sample comment data
+// ──────────────────────────────────────────────────────────────────────────────
+// Confirm Dialog
+// ──────────────────────────────────────────────────────────────────────────────
+
+interface ConfirmDialogProps {
+  title: string
+  message: string
+  subMessage: string
+  confirmLabel: string
+  onConfirm: () => void
+  onCancel: () => void
+}
+
+function ConfirmDialog({ title, message, subMessage, confirmLabel, onConfirm, onCancel }: ConfirmDialogProps) {
+  return (
+    <div
+      className="absolute inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: 'rgba(40,48,55,0.45)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onCancel() }}
+    >
+      <div
+        className="flex flex-col bg-white"
+        style={{
+          width: 360,
+          borderRadius: 4,
+          boxShadow: '0px 0px 2px 0px rgba(40,48,55,0.16), 0px 8px 16px 2px rgba(40,48,55,0.16)',
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 pt-4 pb-3">
+          <span className="text-[14px] font-bold text-[#283037] leading-[20px] tracking-[0.8px]">
+            {title}
+          </span>
+          <button
+            onClick={onCancel}
+            className="flex items-center justify-center w-4 h-4 rounded hover:bg-[#F3F6F8] transition-colors"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+        <div className="h-px bg-[#E4E9ED] mx-0" />
+
+        {/* Body */}
+        <div className="px-4 py-4 flex flex-col gap-2">
+          <p className="text-[13px] text-[#384047] leading-[20px] tracking-[0.4px]">
+            {message}
+          </p>
+          <div className="flex items-start gap-1.5">
+            <span className="mt-[7px] w-1 h-1 rounded-full flex-shrink-0 bg-[#767D84]" />
+            <p className="text-[12px] text-[#767D84] leading-[18px] tracking-[0.4px]">
+              {subMessage}
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="h-px bg-[#E4E9ED]" />
+        <div className="flex items-center justify-end gap-1.5 px-4 py-3">
+          <button
+            onClick={onConfirm}
+            className="px-3 py-[5px] text-[12px] text-white rounded-[2px] transition-colors leading-[14px] tracking-[0.8px]"
+            style={{ backgroundColor: '#2D6BE4' }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#1A56C6')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#2D6BE4')}
+          >
+            {confirmLabel}
+          </button>
+          <button
+            onClick={onCancel}
+            className="px-3 py-[5px] text-[12px] text-[#384047] border border-[#DADFE4] rounded-[2px] bg-white hover:bg-[#F3F6F8] transition-colors leading-[14px] tracking-[0.8px]"
+          >
+            취소
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Sample data
+// ──────────────────────────────────────────────────────────────────────────────
+
 const CUSTOMER_COMMENTS = [
   { date: '2025-02-21', text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.' },
   { date: '2025-02-19', text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.' },
@@ -81,7 +173,23 @@ interface ERSDetailPanelProps {
   onClose: () => void
 }
 
+type DialogType = 'interest' | 'notApplicable' | null
+
 export function ERSDetailPanel({ row, onClose }: ERSDetailPanelProps) {
+  const [interestRegistered, setInterestRegistered] = useState(false)
+  const [notApplicable, setNotApplicable] = useState(false)
+  const [openDialog, setOpenDialog] = useState<DialogType>(null)
+
+  function handleInterestConfirm() {
+    setInterestRegistered(prev => !prev)
+    setOpenDialog(null)
+  }
+
+  function handleNotApplicableConfirm() {
+    setNotApplicable(prev => !prev)
+    setOpenDialog(null)
+  }
+
   return (
     <>
       {/* Backdrop */}
@@ -131,12 +239,30 @@ export function ERSDetailPanel({ row, onClose }: ERSDetailPanelProps) {
           </div>
           {/* Right: buttons */}
           <div className="flex items-center gap-1.5">
-            <button className="flex items-center gap-1 px-2 py-[3px] text-[12px] text-[#384047] border border-[#DADFE4] rounded-[2px] bg-white hover:bg-[#F3F6F8] transition-colors leading-[14px] tracking-[0.8px]">
-              <StarOutlineIcon />
-              관심 ERS 등록
+            {/* 관심 ERS 등록 button */}
+            <button
+              onClick={() => setOpenDialog('interest')}
+              className={cn(
+                'flex items-center gap-1 px-2 py-[3px] text-[12px] border rounded-[2px] transition-colors leading-[14px] tracking-[0.8px]',
+                interestRegistered
+                  ? 'text-[#2D6BE4] border-[#2D6BE4] bg-[#EEF3FB] hover:bg-[#E0EBFA]'
+                  : 'text-[#384047] border-[#DADFE4] bg-white hover:bg-[#F3F6F8]'
+              )}
+            >
+              {interestRegistered ? <StarFilledIcon /> : <StarOutlineIcon />}
+              {interestRegistered ? '관심 ERS 등록 취소' : '관심 ERS 등록'}
             </button>
-            <button className="flex items-center px-2 py-[3px] text-[12px] text-[#384047] border border-[#DADFE4] rounded-[2px] bg-white hover:bg-[#F3F6F8] transition-colors leading-[14px] tracking-[0.8px]">
-              내 부서 해당없음
+            {/* 내 부서 해당없음 button */}
+            <button
+              onClick={() => setOpenDialog('notApplicable')}
+              className={cn(
+                'flex items-center px-2 py-[3px] text-[12px] border rounded-[2px] transition-colors leading-[14px] tracking-[0.8px]',
+                notApplicable
+                  ? 'text-[#2D6BE4] border-[#2D6BE4] bg-[#EEF3FB] hover:bg-[#E0EBFA]'
+                  : 'text-[#384047] border-[#DADFE4] bg-white hover:bg-[#F3F6F8]'
+              )}
+            >
+              {notApplicable ? '내 부서 해당없음 취소' : '내 부서 해당없음'}
             </button>
           </div>
         </div>
@@ -232,6 +358,44 @@ export function ERSDetailPanel({ row, onClose }: ERSDetailPanelProps) {
 
         {/* ── Footer ── */}
         <div className="flex-shrink-0 h-5 bg-white rounded-b" />
+
+        {/* ── Confirm Dialogs ── */}
+        {openDialog === 'interest' && (
+          <ConfirmDialog
+            title={interestRegistered ? '관심 ERS 등록 취소' : '관심 ERS 등록'}
+            message={
+              interestRegistered
+                ? '해당 ERS를 관심 ERS로 등록 취소하시겠습니까?'
+                : '해당 ERS를 관심 ERS로 등록하시겠습니까?'
+            }
+            subMessage={
+              interestRegistered
+                ? '등록 취소한 ERS는 My Task > 관심 ERS에서 제거됩니다.'
+                : '등록한 ERS는 My Task > 관심 ERS에서 확인하실 수 있습니다.'
+            }
+            confirmLabel={interestRegistered ? '등록 취소' : '관심 ERS 등록'}
+            onConfirm={handleInterestConfirm}
+            onCancel={() => setOpenDialog(null)}
+          />
+        )}
+        {openDialog === 'notApplicable' && (
+          <ConfirmDialog
+            title={notApplicable ? '내 부서 해당없음 취소' : '내 부서 해당없음'}
+            message={
+              notApplicable
+                ? '해당 ERS에 내 부서 해당없음 표시를 취소하시겠습니까?'
+                : '해당 ERS에 내 부서 해당없음 표시를 하시겠습니까?'
+            }
+            subMessage={
+              notApplicable
+                ? '취소 후 Matrix Check 내 상태가 이전으로 복원됩니다.'
+                : '내 부서 해당없음 표시를 하시게 되면 Matrix Check 내 None 상태로 변경됩니다.'
+            }
+            confirmLabel={notApplicable ? '해당없음 취소' : '내 부서 해당없음'}
+            onConfirm={handleNotApplicableConfirm}
+            onCancel={() => setOpenDialog(null)}
+          />
+        )}
       </div>
     </>
   )

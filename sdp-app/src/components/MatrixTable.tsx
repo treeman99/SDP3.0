@@ -10,19 +10,23 @@ function getDepth(index: string): number {
   return (index.match(/\./g) || []).length
 }
 
-const STATUS_STYLES: Record<SupportStatus, string> = {
-  Accepted: 'bg-[#E8F5E9] text-[#2E7D32] border border-[#A5D6A7]',
-  Pending:  'bg-[#FFF8E1] text-[#F57F17] border border-[#FFE082]',
-  Rejected: 'bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]',
-  BM:       'bg-[#EDE7F6] text-[#4527A0] border border-[#B39DDB]',
-  Comp:     'bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9]',
+const STATUS_DOT_COLORS: Record<SupportStatus, string> = {
+  Accepted: '#2E7D32',
+  Pending:  '#F57F17',
+  Rejected: '#C62828',
+  BM:       '#4527A0',
+  Comp:     '#1565C0',
   '-':      '',
 }
 
 function StatusBadge({ status }: { status: SupportStatus }) {
   if (status === '-') return <span className="text-[#B0B6BC]">-</span>
   return (
-    <span className={cn('inline-flex items-center px-1.5 py-px rounded text-[10px] font-medium leading-none', STATUS_STYLES[status])}>
+    <span className="inline-flex items-center gap-1 text-[11px] text-[#384047]">
+      <span
+        className="flex-shrink-0 rounded-full"
+        style={{ width: 6, height: 6, backgroundColor: STATUS_DOT_COLORS[status] }}
+      />
       {status}
     </span>
   )
@@ -111,23 +115,19 @@ export function MatrixTable({ onRowClick, selectedIndex }: MatrixTableProps) {
               {/* ERS group */}
               <th
                 colSpan={ERS_COLS.length}
-                className="h-7 bg-[#E8ECF0] border-r border-b border-[#E0E4E8] text-left"
+                className="h-7 bg-[#E8ECF0] border-r border-b border-[#E0E4E8] text-center align-middle"
                 style={{ width: ERS_WIDTH }}
               >
-                <div className="flex items-center justify-between px-3">
-                  <span className="text-[11px] font-semibold text-[#384047]">ERS</span>
-                </div>
+                <span className="text-[11px] font-semibold text-[#384047]">ERS</span>
               </th>
 
               {/* SRS group */}
               <th
                 colSpan={SRS_COLS.length}
-                className="h-7 bg-[#E4EDF9] border-b border-[#E0E4E8] text-left"
+                className="h-7 bg-[#E4EDF9] border-b border-[#E0E4E8] text-center align-middle"
                 style={{ width: SRS_WIDTH }}
               >
-                <div className="flex items-center px-3">
-                  <span className="text-[11px] font-semibold text-[#2D6BE4]">SRS</span>
-                </div>
+                <span className="text-[11px] font-semibold text-[#2D6BE4]">SRS</span>
               </th>
             </tr>
 
@@ -189,9 +189,14 @@ export function MatrixTable({ onRowClick, selectedIndex }: MatrixTableProps) {
                       className="flex items-center gap-1.5 px-2 overflow-hidden cursor-pointer"
                       onClick={() => onRowClick?.(row)}
                     >
-                      {isGroup && (
-                        <span className="flex-shrink-0 inline-flex items-center px-1.5 py-px rounded text-[10px] bg-[#FFF3E0] text-[#E65100] border border-[#FFCC80]">
-                          SRS
+                      {row.badge === 'New' && (
+                        <span className="flex-shrink-0 inline-flex items-center px-1 py-px rounded text-[9px] font-semibold leading-none bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A]">
+                          New
+                        </span>
+                      )}
+                      {row.badge === 'Updated' && (
+                        <span className="flex-shrink-0 inline-flex items-center px-1 py-px rounded text-[9px] font-semibold leading-none bg-[#FFF8E1] text-[#E65100] border border-[#FFCC80]">
+                          Updated
                         </span>
                       )}
                       <span
@@ -211,7 +216,7 @@ export function MatrixTable({ onRowClick, selectedIndex }: MatrixTableProps) {
                     style={{ backgroundColor: rowBg, width: 74, minWidth: 74 }}
                   >
                     {row.progress && row.progress !== '-' ? (
-                      <ProgressBar value={parseInt(row.progress) || 0} />
+                      <span className="text-[11px] text-[#384047]">{row.progress}</span>
                     ) : (
                       <span className="text-[11px] text-[#B0B6BC]">-</span>
                     )}
@@ -264,20 +269,3 @@ export function MatrixTable({ onRowClick, selectedIndex }: MatrixTableProps) {
   )
 }
 
-function ProgressBar({ value }: { value: number }) {
-  if (isNaN(value)) return <span className="text-[11px] text-[#B0B6BC]">-</span>
-  return (
-    <div className="flex flex-col items-center gap-0.5 w-full">
-      <span className="text-[10px] text-[#384047] font-medium">{value}%</span>
-      <div className="w-full h-1 bg-[#E0E4E8] rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full"
-          style={{
-            width: `${value}%`,
-            backgroundColor: value === 100 ? '#5BA85B' : value >= 50 ? '#2D6BE4' : '#F5A623',
-          }}
-        />
-      </div>
-    </div>
-  )
-}

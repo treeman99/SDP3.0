@@ -4,6 +4,7 @@ import { PageHeader } from './components/PageHeader'
 import { FilterToolbar } from './components/FilterToolbar'
 import { MatrixTable } from './components/MatrixTable'
 import { ERSDetailPanel } from './components/ERSDetailPanel'
+import { Footer } from './components/Footer'
 import type { MatrixRow } from './data/matrixData'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
           onClose={() => setSelectedRow(null)}
         />
       )}
+      <Footer />
     </div>
   )
 }
