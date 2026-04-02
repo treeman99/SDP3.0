@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { X, ChevronRight } from 'lucide-react'
 
 interface ImportDialogProps {
@@ -7,23 +7,21 @@ interface ImportDialogProps {
 }
 
 export function ImportDialog({ open, onClose }: ImportDialogProps) {
-  const [file, setFile] = useState<File | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [fileName, setFileName] = useState<string | null>(null)
 
   if (!open) return null
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0]
-    if (selected) setFile(selected)
+  const handleImportClick = () => {
+    setFileName('NEW_ERS_Ver.1.2.4.xlsx')
   }
 
   const handleRemoveFile = () => {
-    setFile(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    setFileName(null)
   }
 
-  const handleImportClick = () => {
-    fileInputRef.current?.click()
+  const handleClose = () => {
+    setFileName(null)
+    onClose()
   }
 
   return (
@@ -31,7 +29,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-[#283037] opacity-[0.52]"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Dialog */}
@@ -48,7 +46,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
               Import
             </p>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="rounded-[2px] hover:bg-[#EDF2F4] p-[1px]"
             >
               <X className="w-[14px] h-[14px] text-[#565E66]" strokeWidth={1.5} />
@@ -80,7 +78,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
           <div className="mt-[16px] w-[600px] h-[345px] rounded-[4px] border border-dashed border-[#B0B8C1] bg-[#FAFBFC] flex flex-col items-center justify-center">
             {/* File Icon */}
             <div className="mb-[16px]">
-              <UploadIcon />
+              {fileName ? <UploadIconColored /> : <UploadIconGray />}
             </div>
 
             {/* Import Button */}
@@ -90,33 +88,25 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
             >
               Import ERS File
             </button>
-
-            {/* File Status */}
-            <div className="mt-[16px] text-[12px] leading-[14px] tracking-[0.8px] text-[#90969D]">
-              {file ? (
-                <div className="flex items-center gap-[4px]">
-                  <FileDocIcon />
-                  <span className="text-[#384047]">{file.name}</span>
-                  <button
-                    onClick={handleRemoveFile}
-                    className="p-[2px] rounded-[2px] hover:bg-[#E4E9ED]"
-                  >
-                    <X className="w-[12px] h-[12px] text-[#90969D]" />
-                  </button>
-                </div>
-              ) : (
-                'No attached files.'
-              )}
-            </div>
           </div>
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            className="hidden"
-            onChange={handleFileSelect}
-          />
+          {/* File Status - outside upload area */}
+          <div className="mt-[8px] text-[12px] leading-[14px] tracking-[0.8px] text-[#90969D]">
+            {fileName ? (
+              <div className="flex items-center gap-[4px]">
+                <FileDocIcon />
+                <span className="text-[#384047]">{fileName}</span>
+                <button
+                  onClick={handleRemoveFile}
+                  className="p-[2px] rounded-[2px] hover:bg-[#E4E9ED]"
+                >
+                  <X className="w-[12px] h-[12px] text-[#90969D]" />
+                </button>
+              </div>
+            ) : (
+              'No attached files.'
+            )}
+          </div>
         </div>
 
         {/* Footer */}
@@ -132,22 +122,36 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
   )
 }
 
-function UploadIcon() {
+/** 파일 미첨부 상태: 회색 아웃라인 아이콘 */
+function UploadIconGray() {
   return (
     <svg width="106" height="90" viewBox="0 0 106 90" fill="none">
-      {/* Folder back */}
       <path d="M4 20C4 17.7909 5.79086 16 8 16H36L44 24H82C84.2091 24 86 25.7909 86 28V76C86 78.2091 84.2091 80 82 80H8C5.79086 80 4 78.2091 4 76V20Z" fill="#E4E9ED" />
-      {/* Folder front */}
       <path d="M0 32C0 29.7909 1.79086 28 4 28H78C80.2091 28 82 29.7909 82 32V80C82 82.2091 80.2091 84 78 84H4C1.79086 84 0 82.2091 0 80V32Z" fill="#EDF2F4" />
-      {/* Document */}
       <rect x="52" y="0" width="50" height="62" rx="3" fill="white" stroke="#DADFE4" strokeWidth="1" />
       <line x1="62" y1="14" x2="92" y2="14" stroke="#E4E9ED" strokeWidth="2" />
       <line x1="62" y1="22" x2="92" y2="22" stroke="#E4E9ED" strokeWidth="2" />
       <line x1="62" y1="30" x2="82" y2="30" stroke="#E4E9ED" strokeWidth="2" />
-      {/* Upload badge */}
       <circle cx="78" cy="64" r="11" fill="white" stroke="#DADFE4" strokeWidth="1" />
       <path d="M78 59L78 69" stroke="#90969D" strokeWidth="1.5" strokeLinecap="round" />
       <path d="M74 63L78 59L82 63" stroke="#90969D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/** 파일 첨부 완료 상태: 컬러 아이콘 */
+function UploadIconColored() {
+  return (
+    <svg width="106" height="90" viewBox="0 0 106 90" fill="none">
+      <path d="M4 20C4 17.7909 5.79086 16 8 16H36L44 24H82C84.2091 24 86 25.7909 86 28V76C86 78.2091 84.2091 80 82 80H8C5.79086 80 4 78.2091 4 76V20Z" fill="#FFE0B2" />
+      <path d="M0 32C0 29.7909 1.79086 28 4 28H78C80.2091 28 82 29.7909 82 32V80C82 82.2091 80.2091 84 78 84H4C1.79086 84 0 82.2091 0 80V32Z" fill="#FFECD2" />
+      <rect x="52" y="0" width="50" height="62" rx="3" fill="white" stroke="#DADFE4" strokeWidth="1" />
+      <line x1="62" y1="14" x2="92" y2="14" stroke="#E4E9ED" strokeWidth="2" />
+      <line x1="62" y1="22" x2="92" y2="22" stroke="#E4E9ED" strokeWidth="2" />
+      <line x1="62" y1="30" x2="82" y2="30" stroke="#E4E9ED" strokeWidth="2" />
+      <circle cx="78" cy="64" r="11" fill="#3392D3" />
+      <path d="M78 59L78 69" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M74 63L78 59L82 63" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
