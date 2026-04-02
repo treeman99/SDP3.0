@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { useComplianceList } from '@/hooks/useComplianceList'
+import { ImportDialog } from '@/components/ImportDialog'
 import type { ComplianceRow } from '@/types/compliance'
 
 const columns: { key: keyof ComplianceRow; label: string; width: number }[] = [
@@ -16,6 +18,7 @@ const columns: { key: keyof ComplianceRow; label: string; width: number }[] = [
 ]
 
 export function ComplianceMatrix() {
+  const [importOpen, setImportOpen] = useState(false)
   const {
     data,
     totalCount,
@@ -26,6 +29,7 @@ export function ComplianceMatrix() {
 
   return (
     <div className="flex flex-col h-full">
+      <ImportDialog open={importOpen} onClose={() => setImportOpen(false)} />
       {/* Page Sub-Header */}
       <div className="h-[40px] bg-[#F3F6F8] flex items-center px-[12px] gap-[4px] border-b border-[#E4E9ED]">
         <h1 className="text-[20px] font-bold leading-[24px] tracking-[0.8px] text-[#384047]">
@@ -40,7 +44,7 @@ export function ComplianceMatrix() {
       <div className="flex items-center justify-between px-[12px] py-[6px]">
         {/* Left buttons */}
         <div className="flex items-center gap-0">
-          <ToolbarButton label="Import" />
+          <ToolbarButton label="Import" onClick={() => setImportOpen(true)} />
           <ToolbarButton label="Export" />
           <ToolbarDivider />
           <ToolbarButton label="History" />
@@ -146,9 +150,9 @@ export function ComplianceMatrix() {
   )
 }
 
-function ToolbarButton({ label, hasDropdown }: { label: string; hasDropdown?: boolean }) {
+function ToolbarButton({ label, hasDropdown, onClick }: { label: string; hasDropdown?: boolean; onClick?: () => void }) {
   return (
-    <button className="flex items-center gap-[4px] h-[20px] px-[8px] py-[3px] rounded-[2px] border border-[#DADFE4] bg-white text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8] whitespace-nowrap">
+    <button onClick={onClick} className="flex items-center gap-[4px] h-[20px] px-[8px] py-[3px] rounded-[2px] border border-[#DADFE4] bg-white text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8] whitespace-nowrap">
       {label}
       {hasDropdown && (
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
