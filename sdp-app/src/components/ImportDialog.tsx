@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Step1SelectFile } from './import-steps/Step1SelectFile'
 import { Step2SelectColumn } from './import-steps/Step2SelectColumn'
+import { Step3ConfirmChange } from './import-steps/Step3ConfirmChange'
 
 interface ImportDialogProps {
   open: boolean
@@ -33,7 +34,7 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
   const stepTitles: Record<number, { title: string; description: string }> = {
     1: { title: 'STEP1. Select Target File', description: 'Import the latest version of ERS file for Compliance Matrix.' },
     2: { title: 'STEP2. Select Target Column', description: 'Please select your desired column.' },
-    3: { title: 'STEP3. Confirm', description: 'Please confirm your import settings.' },
+    3: { title: 'STEP3. Confirm Change', description: 'Please review the changes made from the previous content.' },
   }
 
   const current = stepTitles[step]
@@ -89,6 +90,9 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
             {step === 2 && (
               <Step2SelectColumn />
             )}
+            {step === 3 && (
+              <Step3ConfirmChange />
+            )}
           </div>
         </div>
 
@@ -104,13 +108,22 @@ export function ImportDialog({ open, onClose }: ImportDialogProps) {
               Prev
             </button>
           )}
-          <button
-            onClick={handleNext}
-            className="flex items-center gap-[4px] border border-[#DADFE4] bg-white rounded-[2px] px-[8px] py-[4px] text-[14px] font-normal leading-[20px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]"
-          >
-            Next
-            <ChevronRight className="w-[14px] h-[14px] text-[#384047]" strokeWidth={1.5} />
-          </button>
+          {step < TOTAL_STEPS ? (
+            <button
+              onClick={handleNext}
+              className="flex items-center gap-[4px] border border-[#DADFE4] bg-white rounded-[2px] px-[8px] py-[4px] text-[14px] font-normal leading-[20px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]"
+            >
+              Next
+              <ChevronRight className="w-[14px] h-[14px] text-[#384047]" strokeWidth={1.5} />
+            </button>
+          ) : (
+            <button
+              onClick={handleClose}
+              className="bg-[#3392D3] rounded-[2px] px-[8px] py-[4px] text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white hover:bg-[#2B7DB5]"
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     </div>
