@@ -4,7 +4,7 @@ export function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="w-full bg-[#EDF2F4]">
+    <footer className="w-full bg-[#EDF2F4] shrink-0">
       <div className="h-px w-full bg-[#DADFE4]" />
       <div className="flex items-center justify-end gap-[16px] px-[20px] pt-px pb-[2px]">
         <div className="flex items-center gap-[12px] text-[11px] leading-[12px] tracking-[0.8px] text-[#565E66]">
