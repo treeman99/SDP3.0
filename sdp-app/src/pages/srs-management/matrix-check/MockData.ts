@@ -1,4 +1,4 @@
-import type { MatrixRow, SrsBadgeEntry, DetailData } from './Types'
+import type { MatrixRow, SrsBadgeEntry, DetailData } from '../Types'
 
 const B = (label: string, color = '#007492'): SrsBadgeEntry => ({ label, color })
 

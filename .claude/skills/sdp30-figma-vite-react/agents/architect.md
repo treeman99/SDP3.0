@@ -121,7 +121,19 @@ Builder가 생성한 `src/` 디렉토리 아래의 모든 `.tsx`, `.ts` 파일:
 - 해당 페이지에서 사용하는 임시 데이터(mock data), 타입, 훅도 같은 폴더에 둔다
 - 페이지 컴포넌트 자체도 해당 폴더에 포함한다
 
-### 7. Dialog 폴더 구조
+### 7. 탭 기반 페이지 폴더 구조
+
+**감지 패턴:**
+- 페이지가 탭으로 구성되어 있고, 각 탭이 별도의 화면을 렌더링
+
+**수행:**
+- 각 탭의 컴포넌트와 관련 파일(데이터, 타입 등)을 탭 이름의 하위 폴더에 분리한다
+  - 예: `src/pages/srs-management/matrix-check/MatrixCheck.tsx`
+  - 예: `src/pages/srs-management/srs-list/SrsList.tsx`
+- 탭 간 공유되는 파일(공통 타입, 공통 컴포넌트)은 페이지 폴더 루트에 둔다
+  - 예: `src/pages/srs-management/Types.ts` (탭 공통 타입)
+
+### 8. Dialog 폴더 구조
 
 **수행:**
 - 모든 Dialog 컴포넌트는 `src/dialog/` 폴더에 생성한다

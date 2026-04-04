@@ -1,4 +1,4 @@
-import type { SrsBadgeEntry } from './Types'
+import type { SrsBadgeEntry } from '../Types'
 
 const srsColorThemes: Record<string, { bg: string; border: string; fg: string }> = {
   '#007492': { bg: '#CCF0F9', border: '#B3E8F6', fg: '#007492' },

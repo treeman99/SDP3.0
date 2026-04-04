@@ -9,7 +9,7 @@ import { SrsBadge } from './SrsBadge'
 import { DetailPanel } from './DetailPanel'
 import { columns, ersColumns, srsColumns, ersWidth, srsWidth } from './Columns'
 import { matrixData, sampleDetail } from './MockData'
-import type { SrsColumnKey } from './Types'
+import type { SrsColumnKey } from '../Types'
 
 export function MatrixCheck() {
   const [selectedRow, setSelectedRow] = useState<string | null>(null)

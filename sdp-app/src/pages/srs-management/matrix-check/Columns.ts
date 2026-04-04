@@ -1,4 +1,4 @@
-import type { ColumnDef } from './Types'
+import type { ColumnDef } from '../Types'
 
 export const columns: ColumnDef[] = [
   { key: 'index', label: 'Index', width: 54, group: 'ers', sortable: true },

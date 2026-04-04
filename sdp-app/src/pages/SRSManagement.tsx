@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { MatrixCheck } from './srs-management/MatrixCheck'
+import { MatrixCheck } from './srs-management/matrix-check/MatrixCheck'
+import { SrsList } from './srs-management/srs-list/SrsList'
 
 const tabs = [
   { id: 'matrix-check', label: 'Matrix Check' },
@@ -44,11 +45,7 @@ export function SRSManagement() {
       {/* Tab Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'matrix-check' && <MatrixCheck />}
-        {activeTab === 'srs-list' && (
-          <div className="flex items-center justify-center h-full text-[#90969D] text-[14px]">
-            SRS List (준비 중)
-          </div>
-        )}
+        {activeTab === 'srs-list' && <SrsList />}
       </div>
     </div>
   )

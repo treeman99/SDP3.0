@@ -48,3 +48,15 @@ export interface ColumnDef {
   sortable?: boolean
   filterable?: boolean
 }
+
+export interface SrsListRow {
+  no: number
+  srsTitle: string
+  linkedErs: string
+  usedDate: string
+  support: string
+  supportComment: string
+  department: string
+  assignee: string
+  expected: string
+}
