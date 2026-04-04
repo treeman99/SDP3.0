@@ -142,8 +142,8 @@ export function MatrixCheck() {
                     (srsKey) => (
                       <td
                         key={srsKey}
-                        className={`px-[4px] h-[23px] text-[11px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]${row.srs[srsKey] ? ' cursor-pointer' : ''}`}
-                        onClick={() => row.srs[srsKey] && navigate('/my-task')}
+                        className={`px-[4px] h-[23px] text-[11px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]${!row.isParent ? ' cursor-pointer' : ''}`}
+                        onClick={() => !row.isParent && navigate('/srs-detail')}
                       >
                         {row.srs[srsKey] ? <SrsBadge entry={row.srs[srsKey]!} /> : !row.isParent ? <span className="text-[#B2B6BB]">-</span> : null}
                       </td>

@@ -4,6 +4,7 @@ import { Layout } from '@/components/layout/Layout'
 import { ComplianceMatrix } from '@/pages/ComplianceMatrix'
 import { SRSManagement } from '@/pages/SRSManagement'
 import { MyTask } from '@/pages/MyTask'
+import { SrsDetail } from '@/pages/srs-management/srs-detail/SrsDetail'
 import './index.css'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/compliance-matrix" element={<ComplianceMatrix />} />
             <Route path="/srs-management" element={<SRSManagement />} />
             <Route path="/my-task" element={<MyTask />} />
+            <Route path="/srs-detail" element={<SrsDetail />} />
             <Route path="*" element={<div />} />
           </Route>
         </Routes>
