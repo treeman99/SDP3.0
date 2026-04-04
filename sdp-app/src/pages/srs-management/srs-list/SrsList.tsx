@@ -101,7 +101,7 @@ export function SrsList() {
                 <td className="px-[8px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]" style={{ width: 40 }}>
                   {row.no}
                 </td>
-                <td className="px-[8px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#3392D3] border-r border-[#E4E9ED] truncate cursor-pointer hover:underline" style={{ width: 160, maxWidth: 160 }}>
+                <td className="px-[8px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#3392D3] border-r border-[#E4E9ED] truncate cursor-pointer underline" style={{ width: 160, maxWidth: 160 }}>
                   {row.srsTitle}
                 </td>
                 <td className="px-[8px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED] truncate" style={{ width: 220, maxWidth: 220 }}>

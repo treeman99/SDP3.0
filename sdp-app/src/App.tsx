@@ -3,6 +3,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext'
 import { Layout } from '@/components/layout/Layout'
 import { ComplianceMatrix } from '@/pages/ComplianceMatrix'
 import { SRSManagement } from '@/pages/SRSManagement'
+import { MyTask } from '@/pages/MyTask'
 import './index.css'
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
             <Route path="/" element={<div />} />
             <Route path="/compliance-matrix" element={<ComplianceMatrix />} />
             <Route path="/srs-management" element={<SRSManagement />} />
+            <Route path="/my-task" element={<MyTask />} />
             <Route path="*" element={<div />} />
           </Route>
         </Routes>

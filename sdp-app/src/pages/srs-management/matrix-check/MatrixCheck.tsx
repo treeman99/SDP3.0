@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { InfoTooltip } from '@/components/common/InfoTooltip'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TagBadge } from '@/components/common/TagBadge'
@@ -12,6 +13,7 @@ import { matrixData, sampleDetail } from './MockData'
 import type { SrsColumnKey } from '../Types'
 
 export function MatrixCheck() {
+  const navigate = useNavigate()
   const [selectedRow, setSelectedRow] = useState<string | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
 
@@ -100,8 +102,7 @@ export function MatrixCheck() {
               {matrixData.map((row) => (
                 <tr
                   key={row.index}
-                  onClick={() => handleRowClick(row.index)}
-                  className={`border-b border-[#E4E9ED] cursor-pointer ${
+                  className={`border-b border-[#E4E9ED] ${
                     selectedRow === row.index
                       ? 'bg-[#EBF5FB]'
                       : row.isParent
@@ -114,10 +115,14 @@ export function MatrixCheck() {
                     {row.index}
                   </td>
                   {/* ERS Title */}
-                  <td className="px-[6px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]" style={{ maxWidth: 241 }}>
+                  <td
+                    className="px-[6px] h-[23px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]"
+                    style={{ maxWidth: 241 }}
+                    onClick={() => !row.isParent && handleRowClick(row.index)}
+                  >
                     <div className="flex items-center gap-[4px]">
+                      <span className={`truncate ${!row.isParent ? 'underline text-[#515E94] cursor-pointer' : ''}`}>{row.ersTitle}</span>
                       {row.tag && <TagBadge label={row.tag} />}
-                      <span className={`truncate ${!row.isParent ? 'underline text-[#515E94]' : ''}`}>{row.ersTitle}</span>
                     </div>
                   </td>
                   {/* 진행률 */}
@@ -137,7 +142,8 @@ export function MatrixCheck() {
                     (srsKey) => (
                       <td
                         key={srsKey}
-                        className="px-[4px] h-[23px] text-[11px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]"
+                        className={`px-[4px] h-[23px] text-[11px] leading-[14px] tracking-[0.8px] text-[#384047] border-r border-[#E4E9ED]${row.srs[srsKey] ? ' cursor-pointer' : ''}`}
+                        onClick={() => row.srs[srsKey] && navigate('/my-task')}
                       >
                         {row.srs[srsKey] ? <SrsBadge entry={row.srs[srsKey]!} /> : !row.isParent ? <span className="text-[#B2B6BB]">-</span> : null}
                       </td>

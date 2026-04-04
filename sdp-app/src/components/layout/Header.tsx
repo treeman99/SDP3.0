@@ -133,7 +133,7 @@ export function Header() {
         {/* GNB */}
         <nav className="flex items-center pl-[4px]">
           {/* My Task - no dropdown */}
-          <button className="flex items-center h-[40px] px-[8px] gap-[4px] rounded-[2px] hover:bg-white/10">
+          <button onClick={() => navigate('/my-task')} className="flex items-center h-[40px] px-[8px] gap-[4px] rounded-[2px] hover:bg-white/10">
             <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white pb-[2px]">
               {t('gnb.myTask')}
             </span>
