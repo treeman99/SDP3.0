@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { InfoIcon } from './InfoIcon'
 
 export function InfoTooltip({ title, description }: { title: string; description: string }) {
   const [show, setShow] = useState(false)
@@ -14,7 +15,7 @@ export function InfoTooltip({ title, description }: { title: string; description
 
   return (
     <div className="relative" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
-      <IconInfoSmall />
+      <InfoIcon className="cursor-pointer" />
       {show && (
         <div className="absolute left-0 top-full mt-[2px] z-50">
           {/* Triangle */}
@@ -33,15 +34,5 @@ export function InfoTooltip({ title, description }: { title: string; description
         </div>
       )}
     </div>
-  )
-}
-
-function IconInfoSmall() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-pointer">
-      <rect x="1" y="1" width="14" height="14" rx="2" stroke="#90969D" strokeWidth="1" fill="none" />
-      <path d="M8 5V4" stroke="#90969D" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M8 12V7" stroke="#90969D" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
   )
 }
