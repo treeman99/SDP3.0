@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MatrixCheck } from '@/components/MatrixCheck'
+import { MatrixCheck } from './srs-management/MatrixCheck'
 
 const tabs = [
   { id: 'matrix-check', label: 'Matrix Check' },

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Step1SelectFile } from './import-steps/Step1SelectFile'
-import { Step2SelectColumn } from './import-steps/Step2SelectColumn'
-import { Step3ConfirmChange } from './import-steps/Step3ConfirmChange'
+import { Step1SelectFile } from './Step1SelectFile'
+import { Step2SelectColumn } from './Step2SelectColumn'
+import { Step3ConfirmChange } from './Step3ConfirmChange'
 
 interface ImportDialogProps {
   open: boolean

@@ -6,6 +6,29 @@ Architect Agent는 **Verifier가 100점 합격 판정을 내린 후에만 실행
 
 ---
 
+## 네이밍 규칙 (코드 작성 및 리팩토링 시 필수)
+
+모든 코드 작성 및 리팩토링 시 아래 네이밍 규칙을 반드시 따른다. 외부 라이브러리에서 가져오는 파일(shadcn/ui 등)은 제외하고, **우리가 직접 생성하는 파일/폴더**에만 적용한다.
+
+### 1. 페이지 대표 컴포넌트 위치
+- 각 페이지의 **대표 컴포넌트**는 `src/pages/` 바로 아래에 파일을 둔다
+- 예: `src/pages/SRSManagement.tsx`, `src/pages/ComplianceMatrix.tsx`
+- 해당 페이지의 서브 컴포넌트, 데이터, 타입은 페이지 이름의 하위 폴더에 둔다
+- 예: `src/pages/srs-management/MatrixCheck.tsx`, `src/pages/srs-management/DetailPanel.tsx`
+
+### 2. 폴더 이름 규칙
+- **소문자 + 하이픈(-)** 으로 단어를 구분한다
+- 예: `srs-management`, `compliance-matrix`, `import-dialog`
+- 잘못된 예: `SRSManagement`, `complianceMatrix`, `import_dialog`
+
+### 3. 파일 이름 규칙
+- **PascalCase** (대문자로 시작, 대문자로 단어 구분)
+- 예: `StatusLegend.tsx`, `MatrixCheck.tsx`, `MockData.ts`, `Columns.ts`, `Types.ts`
+- 잘못된 예: `mockData.ts`, `columns.ts`, `statusLegend.tsx`
+- 예외: React 훅 파일은 `use` 접두어 + PascalCase (`useComplianceList.ts`) — React 관례를 따른다
+
+---
+
 ## 실행 조건
 
 - Verifier 점수 = 100점 이후에만 실행
@@ -68,16 +91,43 @@ Builder가 생성한 `src/` 디렉토리 아래의 모든 `.tsx`, `.ts` 파일:
 - cn() 헬퍼 함수 또는 스타일 상수로 추출
 - 해당 위치를 추출된 유틸리티로 교체
 
-### 5. 컴포넌트 파일 분리
+### 5. 컴포넌트 파일 분리 (최우선)
+
+**이 규칙은 다른 모든 규칙보다 우선한다.**
 
 **감지 패턴:**
-- 단일 파일 200줄 초과
-- 파일 내 2개 이상의 exported 컴포넌트
-- 과도한 조건 분기
+- 단일 파일에 2개 이상의 컴포넌트 함수가 존재
+- 단일 파일 100줄 초과
+- 타입 정의, 상수, 목 데이터가 컴포넌트 파일에 섞여 있음
 
 **수행:**
-- 서브 컴포넌트를 별도 파일로 분리
-- index.ts 파일로 re-export 정리
+- **모든 컴포넌트를 각각 독립된 파일로 분리한다** (예외 없음)
+- 타입/인터페이스 → `types.ts`로 분리
+- 상수/설정 → 별도 파일로 분리 (예: `columns.ts`, `constants.ts`)
+- 목 데이터 → `mockData.ts`로 분리
+- **페이지 전용 컴포넌트**는 해당 페이지 이름의 폴더에 모은다
+  - 예: SRS Management 페이지 → `src/components/srs-management/`
+- **공통/공용 컴포넌트**는 `src/components/common/`에 모은다
+  - 여러 페이지에서 재사용 가능한 컴포넌트 (버튼, 아이콘, 뱃지, 툴팁 등)
+  - 2개 이상의 파일에서 import하는 컴포넌트는 반드시 common으로 이동
+- index.ts 파일로 re-export 정리 (필요한 경우)
+
+### 6. 페이지별 폴더 구조
+
+**수행:**
+- 특정 페이지에서만 사용되는 컴포넌트는 `src/pages/{페이지이름}/` 폴더에 모은다
+  - 예: SRS Management 관련 → `src/pages/srs-management/`
+  - 예: Compliance Matrix 관련 → `src/pages/compliance-matrix/`
+- 해당 페이지에서 사용하는 임시 데이터(mock data), 타입, 훅도 같은 폴더에 둔다
+- 페이지 컴포넌트 자체도 해당 폴더에 포함한다
+
+### 7. Dialog 폴더 구조
+
+**수행:**
+- 모든 Dialog 컴포넌트는 `src/dialog/` 폴더에 생성한다
+- Dialog 내부가 복잡한 경우 (서브 스텝, 여러 서브 컴포넌트 등) 해당 Dialog 이름의 하위 폴더를 만들어 분리한다
+  - 예: `src/dialog/ImportDialog/ImportDialog.tsx`, `src/dialog/ImportDialog/Step1SelectFile.tsx`
+- 단순한 Dialog는 `src/dialog/` 루트에 단일 파일로 둔다
 
 ---
 
@@ -127,6 +177,11 @@ Builder가 생성한 `src/` 디렉토리 아래의 모든 `.tsx`, `.ts` 파일:
 
 ## 사후 검증
 
-리팩토링 완료 후 Orchestrator는 사용자에게 화면을 다시 확인해달라고 요청한다:
-- 시각적 회귀가 보고되면 → Architect가 해당 변경을 되돌린다
-- 문제없으면 → 최종 완료
+리팩토링 완료 후 **반드시 Verifier Agent를 다시 실행**하여 UI가 변경되지 않았는지 검증한다:
+
+1. Orchestrator가 Verifier를 호출한다 (동일한 Figma 기준으로 재채점)
+2. **반드시 사용자에게 브라우저 캡처 스크린샷을 다시 요청**한다
+3. Verifier 100점 → 최종 완료
+4. Verifier < 100점 → Architect가 시각 회귀를 유발한 변경을 롤백 후 재검증
+
+**사용자에게 "괜찮아 보이나요?"라고 묻는 것으로 대체할 수 없다. 반드시 Verifier 프로토콜을 실행한다.**

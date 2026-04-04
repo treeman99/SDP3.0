@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { X, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react'
+import { CheckboxChecked, CheckboxUnchecked } from '@/components/common/Checkbox'
+import { PaginationButton, getVisiblePages } from '@/components/common/Pagination'
 
 interface NotificationListDialogProps {
   open: boolean
@@ -252,45 +254,5 @@ export function NotificationListDialog({ open, onClose }: NotificationListDialog
         </div>
       </div>
     </div>
-  )
-}
-
-function PaginationButton({ children, disabled, onClick }: { children: React.ReactNode; disabled?: boolean; onClick?: () => void }) {
-  return (
-    <button
-      disabled={disabled}
-      onClick={onClick}
-      className={`w-[24px] h-[24px] flex items-center justify-center rounded-[2px] ${
-        disabled ? 'text-[#CCD1D6] cursor-not-allowed' : 'text-[#565E66] hover:bg-[#EDF2F4]'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
-
-function getVisiblePages(currentPage: number, totalPages: number): number[] {
-  const maxVisible = 10
-  if (totalPages <= maxVisible) return Array.from({ length: totalPages }, (_, i) => i + 1)
-  let start = Math.max(1, currentPage - Math.floor(maxVisible / 2))
-  const end = Math.min(totalPages, start + maxVisible - 1)
-  if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1)
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
-}
-
-function CheckboxChecked() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <rect x="0.5" y="0.5" width="13" height="13" rx="2" fill="#3392D3" stroke="#3392D3" />
-      <path d="M3.5 7L6 9.5L10.5 4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function CheckboxUnchecked() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <rect x="0.5" y="0.5" width="13" height="13" rx="2" fill="white" stroke="#DADFE4" />
-    </svg>
   )
 }

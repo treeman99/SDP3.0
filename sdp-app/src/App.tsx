@@ -11,9 +11,10 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<ComplianceMatrix />} />
+            <Route path="/" element={<div />} />
             <Route path="/compliance-matrix" element={<ComplianceMatrix />} />
             <Route path="/srs-management" element={<SRSManagement />} />
+            <Route path="*" element={<div />} />
           </Route>
         </Routes>
       </BrowserRouter>

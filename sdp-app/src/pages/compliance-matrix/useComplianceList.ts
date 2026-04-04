@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { ComplianceRow, ComplianceListResponse } from '@/types/compliance'
-import { fetchComplianceList } from '@/data/complianceData'
+import type { ComplianceRow, ComplianceListResponse } from './Types'
+import { fetchComplianceList } from './ComplianceData'
 
 interface UseComplianceListReturn {
   data: ComplianceRow[]

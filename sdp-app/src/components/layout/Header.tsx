@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { NotificationListDialog } from '@/components/NotificationListDialog'
+import { NotificationListDialog } from '@/dialog/NotificationListDialog'
 
 interface NotificationItem {
   id: string
@@ -91,11 +91,11 @@ export function Header() {
       {/* Left: Logo, Tenant, GNB */}
       <div className="flex items-center">
         {/* Logo */}
-        <div className="pr-[8px]">
+        <button onClick={() => navigate('/')} className="pr-[8px] cursor-pointer">
           <span className="text-[19px] font-bold leading-[24px] tracking-[0.8px] text-white" style={{ fontFamily: "'Samsung Sharp Sans', sans-serif" }}>
             SDP
           </span>
-        </div>
+        </button>
 
         {/* Tenant */}
         <div className="relative">

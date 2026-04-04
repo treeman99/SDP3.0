@@ -1,4 +1,4 @@
-import type { ComplianceRow, ComplianceListResponse, ComplianceListParams } from '@/types/compliance'
+import type { ComplianceRow, ComplianceListResponse, ComplianceListParams } from './Types'
 
 const mockData: ComplianceRow[] = [
   { complianceTrackerId: 'ABDD-MCKA-04', sortOrder: 1, ersRequirementId: 'ABDD-MCKA-04', siliconRevision: 'AA', category: '', description: 'The Sensor', vendorAcceptance: 'Accepted', complianceDetails: '[PM(과제PL) - Accepted]', srsIndex: '[SRS-63]', customerComment: '[PM(과제PL) - Accepted]' },
