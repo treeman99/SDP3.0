@@ -45,30 +45,20 @@ export function FunctionDetail() {
           </div>
 
           {/* Tabs */}
-          <div className="flex items-end h-full">
-            {tabs.map((tab, idx) => {
-              const isActive = activeTab === tab.key
-              return (
-                <button
-                  key={tab.key}
-                  onClick={() => handleTabChange(tab.key)}
-                  className={`flex flex-col items-start pt-[14px] ${idx > 0 ? 'ml-[16px]' : ''}`}
-                >
-                  <span
-                    className={`text-[14px] font-bold leading-[20px] tracking-[0.8px] pb-[6px] ${
-                      isActive ? 'text-[#3392D3]' : 'text-[#767D84]'
-                    }`}
-                  >
-                    {tab.label}
-                  </span>
-                  <div
-                    className={`w-full h-[3px] ${
-                      isActive ? 'bg-[#3392D3]' : 'bg-[#DADFE4]'
-                    }`}
-                  />
-                </button>
-              )
-            })}
+          <div className="flex items-center h-full">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => handleTabChange(tab.key)}
+                className={`px-[12px] py-[6px] text-[14px] font-bold leading-[20px] tracking-[0.8px] border-b-[3px] ${
+                  activeTab === tab.key
+                    ? 'text-[#3392D3] border-[#3392D3]'
+                    : 'text-[#767D84] border-transparent'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
         <div className="h-px bg-[#DADFE4]" />

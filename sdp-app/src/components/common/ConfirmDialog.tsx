@@ -62,13 +62,13 @@ export function ConfirmDialog({
                 onConfirm()
                 onClose()
               }}
-              className="bg-[#3392D3] rounded-[2px] w-[48px] flex items-center justify-center py-[4px] text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white hover:bg-[#2B7DB5]"
+              className="bg-[#3392D3] rounded-[2px] min-w-[48px] px-[8px] flex items-center justify-center py-[4px] text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white hover:bg-[#2B7DB5]"
             >
               {confirmLabel}
             </button>
             <button
               onClick={onClose}
-              className="border border-[#DADFE4] bg-white rounded-[2px] w-[48px] flex items-center justify-center py-[4px] text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]"
+              className="border border-[#DADFE4] bg-white rounded-[2px] min-w-[48px] px-[8px] flex items-center justify-center py-[4px] text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]"
             >
               {cancelLabel}
             </button>

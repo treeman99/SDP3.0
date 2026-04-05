@@ -6,6 +6,7 @@ import { SRSManagement } from '@/pages/SRSManagement'
 import { MyTask } from '@/pages/MyTask'
 import { SrsDetail } from '@/pages/srs-management/srs-detail/SrsDetail'
 import { FunctionManagement } from '@/pages/function-management/FunctionManagement'
+import { ErsManagement } from '@/pages/ers-management/ErsManagement'
 import { FunctionDetail } from '@/pages/function-management/function-detail/FunctionDetail'
 import './index.css'
 
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/my-task" element={<MyTask />} />
             <Route path="/srs-detail" element={<SrsDetail />} />
             <Route path="/function-management" element={<FunctionManagement />} />
+            <Route path="/ers-management" element={<ErsManagement />} />
             <Route path="/function-detail" element={<FunctionDetail />} />
             <Route path="*" element={<div />} />
           </Route>
