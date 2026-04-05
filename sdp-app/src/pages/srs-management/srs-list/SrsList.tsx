@@ -88,7 +88,7 @@ export function SrsList() {
                     <span className="flex-1 truncate">{col.label}</span>
                     <div className="flex items-center gap-0 shrink-0">
                       {col.sortable && <SortIcon />}
-                      {col.filterable && <FilterIcon />}
+                      {'filterable' in col && col.filterable && <FilterIcon />}
                     </div>
                   </div>
                 </th>

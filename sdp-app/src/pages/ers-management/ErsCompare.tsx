@@ -4,7 +4,7 @@ import { FilterIcon } from '@/components/common/FilterIcon'
 import { InfoIcon } from '@/components/common/InfoIcon'
 import { TagBadge } from '@/components/common/TagBadge'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
-import { diffWords, type DiffSegment } from '@/utils/diffWords'
+import { diffWords } from '@/utils/diffWords'
 import { ersCompareData, compareDetailContent, type ErsCompareItem } from './MockData'
 
 type StatusFilter = 'Unknown' | 'Link' | 'Pass'

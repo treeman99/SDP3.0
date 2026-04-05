@@ -1,46 +1,14 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { InfoTooltip } from '@/components/common/InfoTooltip'
 import { SortIcon } from '@/components/common/SortIcon'
 import { FilterIcon } from '@/components/common/FilterIcon'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TagBadge } from '@/components/common/TagBadge'
-import { PaginationButton, getVisiblePages } from '@/components/common/Pagination'
+import { TablePagination } from '@/components/common/Pagination'
 import { ProgressBadge } from '../my-ers/ProgressBadge'
 import { ersSubscriptionList, interestErsData, interestFunctionData, interestErsSummary } from './MockData'
-
-interface ColumnDef {
-  key: string
-  label: string
-  width: number
-  sortable?: boolean
-  filterable?: boolean
-  hasInfo?: boolean
-  infoTitle?: string
-  infoDesc?: string
-}
-
-const ersColumns: ColumnDef[] = [
-  { key: 'index', label: 'Index', width: 60, sortable: true },
-  { key: 'ersTitle', label: 'ERS Title', width: 180, sortable: true, filterable: true },
-  { key: 'progress', label: 'Progress', width: 100, sortable: true, filterable: true },
-  { key: 'srsTitle', label: 'SRS Title', width: 250, sortable: true, filterable: true },
-  { key: 'support', label: 'Support', width: 90, sortable: true, filterable: true },
-  { key: 'assignDate', label: 'Assign Date', width: 100, sortable: true },
-  { key: 'lastUpdated', label: 'Last Updated', width: 100, sortable: true },
-  { key: 'coWorker', label: 'Co-Worker', width: 160, sortable: true, filterable: true },
-]
-
-const funcColumns: ColumnDef[] = [
-  { key: 'functionTitle', label: 'Function Title', width: 180, sortable: true, filterable: true },
-  { key: 'progress', label: 'Progress', width: 100, sortable: true, filterable: true },
-  { key: 'linkedErs', label: 'Linked ERS', width: 100, sortable: true, hasInfo: true, infoTitle: 'Linked ERS', infoDesc: 'Linked ERS 설명' },
-  { key: 'relatedErs', label: 'Related ERS', width: 100, sortable: true, hasInfo: true, infoTitle: 'Related ERS', infoDesc: 'Related ERS 설명' },
-  { key: 'features', label: 'Features', width: 100, sortable: true, hasInfo: true, infoTitle: 'Features', infoDesc: 'Features 설명' },
-  { key: 'assignDate', label: 'Assign Date', width: 100, sortable: true },
-  { key: 'lastUpdated', label: 'Last Updated', width: 100, sortable: true },
-  { key: 'coWorker', label: 'Co-Worker', width: 160, sortable: true, filterable: true },
-]
+import { ersColumns, funcColumns } from '../Types'
 
 export function InterestErs() {
   const [selectedId, setSelectedId] = useState(ersSubscriptionList[2]?.id ?? '')
@@ -281,44 +249,6 @@ export function InterestErs() {
             <TablePagination currentPage={funcPage} totalPages={totalFuncPages} onPageChange={setFuncPage} />
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function TablePagination({ currentPage, totalPages, onPageChange }: { currentPage: number; totalPages: number; onPageChange: (page: number) => void }) {
-  return (
-    <div className="flex items-center justify-center py-[6px] gap-[8px]">
-      <div className="flex items-center">
-        <PaginationButton disabled={currentPage === 1} onClick={() => onPageChange(1)}>
-          <ChevronsLeft className="w-[14px] h-[14px]" />
-        </PaginationButton>
-        <PaginationButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
-          <ChevronLeft className="w-[14px] h-[14px]" />
-        </PaginationButton>
-      </div>
-      <div className="flex items-center gap-[2px]">
-        {getVisiblePages(currentPage, totalPages).map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`w-[24px] h-[24px] flex items-center justify-center rounded-[2px] text-[14px] font-bold leading-[20px] tracking-[0.8px] ${
-              page === currentPage
-                ? 'bg-[#E4E9ED] text-[#3392D3]'
-                : 'bg-transparent text-[#565E66] hover:bg-[#EDF2F4]'
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
-      <div className="flex items-center">
-        <PaginationButton disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
-          <ChevronRight className="w-[14px] h-[14px]" />
-        </PaginationButton>
-        <PaginationButton disabled={currentPage === totalPages} onClick={() => onPageChange(totalPages)}>
-          <ChevronsRight className="w-[14px] h-[14px]" />
-        </PaginationButton>
       </div>
     </div>
   )

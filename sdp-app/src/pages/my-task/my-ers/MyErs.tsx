@@ -1,46 +1,13 @@
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { InfoTooltip } from '@/components/common/InfoTooltip'
 import { SortIcon } from '@/components/common/SortIcon'
 import { FilterIcon } from '@/components/common/FilterIcon'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TagBadge } from '@/components/common/TagBadge'
-import { PaginationButton, getVisiblePages } from '@/components/common/Pagination'
+import { TablePagination } from '@/components/common/Pagination'
 import { ProgressBadge } from './ProgressBadge'
 import { assignedErsData, assignedFunctionData, ersSummary } from './MockData'
-
-interface ColumnDef {
-  key: string
-  label: string
-  width: number
-  sortable?: boolean
-  filterable?: boolean
-  hasInfo?: boolean
-  infoTitle?: string
-  infoDesc?: string
-}
-
-const ersColumns: ColumnDef[] = [
-  { key: 'index', label: 'Index', width: 60, sortable: true },
-  { key: 'ersTitle', label: 'ERS Title', width: 180, sortable: true, filterable: true },
-  { key: 'progress', label: 'Progress', width: 100, sortable: true, filterable: true },
-  { key: 'srsTitle', label: 'SRS Title', width: 250, sortable: true, filterable: true },
-  { key: 'support', label: 'Support', width: 90, sortable: true, filterable: true },
-  { key: 'assignDate', label: 'Assign Date', width: 100, sortable: true },
-  { key: 'lastUpdated', label: 'Last Updated', width: 100, sortable: true },
-  { key: 'coWorker', label: 'Co-Worker', width: 160, sortable: true, filterable: true },
-]
-
-const funcColumns: ColumnDef[] = [
-  { key: 'functionTitle', label: 'Function Title', width: 180, sortable: true, filterable: true },
-  { key: 'progress', label: 'Progress', width: 100, sortable: true, filterable: true },
-  { key: 'linkedErs', label: 'Linked ERS', width: 100, sortable: true, hasInfo: true, infoTitle: 'Linked ERS', infoDesc: 'Linked ERS 설명' },
-  { key: 'relatedErs', label: 'Related ERS', width: 100, sortable: true, hasInfo: true, infoTitle: 'Related ERS', infoDesc: 'Related ERS 설명' },
-  { key: 'features', label: 'Features', width: 100, sortable: true, hasInfo: true, infoTitle: 'Features', infoDesc: 'Features 설명' },
-  { key: 'assignDate', label: 'Assign Date', width: 100, sortable: true },
-  { key: 'lastUpdated', label: 'Last Updated', width: 100, sortable: true },
-  { key: 'coWorker', label: 'Co-Worker', width: 160, sortable: true, filterable: true },
-]
+import { ersColumns, funcColumns } from '../Types'
 
 export function MyErs() {
   const [ersPage, setErsPage] = useState(1)
@@ -53,17 +20,12 @@ export function MyErs() {
       {/* Section 1: Assigned ERS-SRS */}
       <div className="flex flex-col">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-[8px]">
-          <div className="flex items-center gap-[8px]">
-            <div className="flex items-center gap-[2px]">
-              <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-[#384047]">
-                Assigned ERS-SRS
-              </span>
-              <InfoTooltip title="Assigned ERS-SRS" description="배정된 ERS-SRS 목록" />
-            </div>
-            <button className="text-[12px] leading-[14px] tracking-[0.8px] text-[#3392D3] hover:underline">
-              Matrix Check 바로가기
-            </button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[2px]">
+            <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-[#384047]">
+              Assigned ERS-SRS
+            </span>
+            <InfoTooltip title="Assigned ERS-SRS" description="배정된 ERS-SRS 목록" />
           </div>
           <div className="flex items-center gap-[8px] text-[12px] leading-[14px] tracking-[0.8px] text-[#767D84]">
             <span>Total: {ersSummary.total}</span>
@@ -72,6 +34,11 @@ export function MyErs() {
             <span>In Approval: {ersSummary.inApproval}</span>
             <span>Done: {ersSummary.done}</span>
           </div>
+        </div>
+        <div className="mt-[4px] mb-[4px]">
+          <button className="border border-[#DADFE4] bg-white rounded-[2px] px-[6px] py-[3px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]">
+            Matrix Check 바로가기
+          </button>
         </div>
 
         {/* ERS Table */}
@@ -150,21 +117,21 @@ export function MyErs() {
       {/* Section 2: Assigned Function */}
       <div className="flex flex-col">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-[4px]">
-          <div className="flex items-center gap-[8px]">
-            <div className="flex items-center gap-[2px]">
-              <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-[#384047]">
-                Assigned Function
-              </span>
-              <InfoTooltip title="Assigned Function" description="배정된 Function 목록" />
-            </div>
-            <button className="text-[12px] leading-[14px] tracking-[0.8px] text-[#3392D3] hover:underline">
-              Function Management 바로가기
-            </button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[2px]">
+            <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-[#384047]">
+              Assigned Function
+            </span>
+            <InfoTooltip title="Assigned Function" description="배정된 Function 목록" />
           </div>
           <span className="text-[12px] leading-[14px] tracking-[0.8px] text-[#767D84]">
             Total: n개
           </span>
+        </div>
+        <div className="mt-[4px] mb-[4px]">
+          <button className="border border-[#DADFE4] bg-white rounded-[2px] px-[6px] py-[3px] text-[12px] leading-[14px] tracking-[0.8px] text-[#384047] hover:bg-[#F3F6F8]">
+            Function Management 바로가기
+          </button>
         </div>
 
         {/* Function Table */}
@@ -235,44 +202,6 @@ export function MyErs() {
 
         {/* Function Pagination */}
         <TablePagination currentPage={funcPage} totalPages={totalFuncPages} onPageChange={setFuncPage} />
-      </div>
-    </div>
-  )
-}
-
-function TablePagination({ currentPage, totalPages, onPageChange }: { currentPage: number; totalPages: number; onPageChange: (page: number) => void }) {
-  return (
-    <div className="flex items-center justify-center py-[6px] gap-[8px]">
-      <div className="flex items-center">
-        <PaginationButton disabled={currentPage === 1} onClick={() => onPageChange(1)}>
-          <ChevronsLeft className="w-[14px] h-[14px]" />
-        </PaginationButton>
-        <PaginationButton disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
-          <ChevronLeft className="w-[14px] h-[14px]" />
-        </PaginationButton>
-      </div>
-      <div className="flex items-center gap-[2px]">
-        {getVisiblePages(currentPage, totalPages).map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`w-[24px] h-[24px] flex items-center justify-center rounded-[2px] text-[14px] font-bold leading-[20px] tracking-[0.8px] ${
-              page === currentPage
-                ? 'bg-[#E4E9ED] text-[#3392D3]'
-                : 'bg-transparent text-[#565E66] hover:bg-[#EDF2F4]'
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
-      <div className="flex items-center">
-        <PaginationButton disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
-          <ChevronRight className="w-[14px] h-[14px]" />
-        </PaginationButton>
-        <PaginationButton disabled={currentPage === totalPages} onClick={() => onPageChange(totalPages)}>
-          <ChevronsRight className="w-[14px] h-[14px]" />
-        </PaginationButton>
       </div>
     </div>
   )
