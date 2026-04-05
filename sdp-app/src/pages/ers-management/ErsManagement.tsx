@@ -25,6 +25,7 @@ export function ErsManagement() {
   const [parseErsOpen, setParseErsOpen] = useState(false)
   const [qnaViewOpen, setQnaViewOpen] = useState(false)
   const [ersData] = useState<ErsItem[]>(ersTreeData)
+  const [compareEmpty] = useState(false)
   const [leftWidth, setLeftWidth] = useState(50)
   const containerRef = useRef<HTMLDivElement>(null)
   const isDragging = useRef(false)
@@ -95,30 +96,61 @@ export function ErsManagement() {
 
           {/* Right buttons */}
           <div className="absolute right-[12px] top-[8px] flex items-center gap-[6px]">
-            {activeTab === 'ersCompare' && (
-              <button className="bg-[#3392D3] rounded-[2px] px-[8px] py-[2px] hover:bg-[#2B7DB5]">
-                <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white whitespace-nowrap">
-                  Save
-                </span>
+            {activeTab === 'ersCompare' ? (
+              compareEmpty ? (
+                <>
+                  <button className="bg-white border border-[#DADFE4] rounded-[2px] px-[8px] py-[2px]">
+                    <span className="text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] whitespace-nowrap">
+                      Select New ERS
+                    </span>
+                  </button>
+                  <button
+                    className="bg-[#E4E9ED] border border-[#DADFE4] rounded-[2px] px-[8px] py-[2px] cursor-not-allowed"
+                    disabled
+                  >
+                    <span className="text-[14px] leading-[20px] tracking-[0.8px] text-[#B2B6BB] whitespace-nowrap">
+                      Replace ERS
+                    </span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="bg-[#3392D3] rounded-[2px] px-[8px] py-[2px] hover:bg-[#2B7DB5]">
+                    <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white whitespace-nowrap">
+                      Save
+                    </span>
+                  </button>
+                  <button
+                    className="bg-white border border-[#DADFE4] rounded-[2px]"
+                    onClick={() => setParseErsOpen(true)}
+                  >
+                    <div className="flex items-center gap-[4px] px-[8px] py-[2px]">
+                      <span className="text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] whitespace-nowrap">
+                        Parse ERS File
+                      </span>
+                    </div>
+                  </button>
+                </>
+              )
+            ) : (
+              <button
+                className="bg-white border border-[#DADFE4] rounded-[2px]"
+                onClick={() => setParseErsOpen(true)}
+              >
+                <div className="flex items-center gap-[4px] px-[8px] py-[2px]">
+                  <span className="text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] whitespace-nowrap">
+                    Parse ERS File
+                  </span>
+                </div>
               </button>
             )}
-            <button
-              className="bg-white border border-[#DADFE4] rounded-[2px]"
-              onClick={() => setParseErsOpen(true)}
-            >
-              <div className="flex items-center gap-[4px] px-[8px] py-[2px]">
-                <span className="text-[14px] leading-[20px] tracking-[0.8px] text-[#384047] whitespace-nowrap">
-                  Parse ERS File
-                </span>
-              </div>
-            </button>
           </div>
         </div>
       </div>
 
       {/* ── Body ── */}
       {activeTab === 'ersCompare' ? (
-        <ErsCompare />
+        <ErsCompare isEmpty={compareEmpty} />
       ) : (
       <div ref={containerRef} className="flex flex-1 overflow-hidden">
         {/* ── Left Panel ── */}
