@@ -6,6 +6,7 @@ import { AddIndexDialog } from '@/dialog/AddIndexDialog'
 import { ParseErsFileDialog } from '@/dialog/ParseErsFileDialog'
 import { QnaViewDialog } from '@/dialog/QnaViewDialog'
 import { ersTreeData, detailContent, type ErsItem } from './MockData'
+import { ErsCompare } from './ErsCompare'
 
 type TabKey = 'ersList' | 'ersCompare'
 
@@ -92,8 +93,15 @@ export function ErsManagement() {
             </div>
           </div>
 
-          {/* Parse ERS File */}
-          <div className="absolute right-[12px] top-[8px] flex items-center">
+          {/* Right buttons */}
+          <div className="absolute right-[12px] top-[8px] flex items-center gap-[6px]">
+            {activeTab === 'ersCompare' && (
+              <button className="bg-[#3392D3] rounded-[2px] px-[8px] py-[2px] hover:bg-[#2B7DB5]">
+                <span className="text-[14px] font-bold leading-[20px] tracking-[0.8px] text-white whitespace-nowrap">
+                  Save
+                </span>
+              </button>
+            )}
             <button
               className="bg-white border border-[#DADFE4] rounded-[2px]"
               onClick={() => setParseErsOpen(true)}
@@ -108,7 +116,10 @@ export function ErsManagement() {
         </div>
       </div>
 
-      {/* ── Body: Left + Divider + Right ── */}
+      {/* ── Body ── */}
+      {activeTab === 'ersCompare' ? (
+        <ErsCompare />
+      ) : (
       <div ref={containerRef} className="flex flex-1 overflow-hidden">
         {/* ── Left Panel ── */}
         <div
@@ -396,6 +407,7 @@ export function ErsManagement() {
           )}
         </div>
       </div>
+      )}
 
       {/* Add Index Dialog */}
       <AddIndexDialog
